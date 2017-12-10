@@ -75,6 +75,6 @@ def main():
         except Exception  as e:
             print(e)
     movie_data = pd.DataFrame(movieMessage)
-    movie_data.to_excel(r'./dataSet/movieData.xlsx')
+    movie_data.to_excel(r'movieData.xlsx')
 if __name__=='__main__':
     main()
