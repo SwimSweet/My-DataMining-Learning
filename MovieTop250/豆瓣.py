@@ -24,11 +24,17 @@ def getMovieItem(movieHtml):
     movieStarInfo = movieMainMessage.find('div', attrs={'id': 'interest_sectl'})
     movieInfo = movieMainMessage.find('div', attrs={'id': 'info'})
     messageList = movieInfo.get_text().strip().split('\n')
-    movieDirector = messageList[0].split(':')[1] #导演
-    movieActor = messageList[2].split(':')[1]   #主演
-    movieType = messageList[3].split(':')[1]   #电影类型
-    movieCountry = messageList[4].split(':')[1]   #电影制作国家
-    movieLanguage = messageList[5].split(':')[1] #电影语言
+    mesDict={}
+    for mes in messageList:
+        if(len(mes.split(":"))>1):
+            mes_type=mes.split(":")[0]
+            mes_cont=mes.split(":")[1]
+            mesDict[mes_type]=mes_cont.strip()
+    movieDirector =mesDict.get('导演',"")#导演
+    movieActor = mesDict.get('主演' ,"" ) #主演
+    movieType = mesDict.get('类型',""  )#电影类型
+    movieCountry = mesDict.get('制片国家/地区',"")   #电影制作国家
+    movieLanguage = mesDict.get('语言',"") #电影语言
     movieScore = movieStarInfo.find('strong', attrs={'class': 'll rating_num'}).get_text()  #电影评分
     movieReviewNum = movieStarInfo.find("span", attrs={'property': 'v:votes'}).get_text()  #电影评论
     movieScoreGrade = list(map(lambda x: x.get_text(), movieStarInfo.find_all('span', attrs={'class': 'rating_per'})))  #电影星级
@@ -77,4 +83,7 @@ def main():
     movie_data = pd.DataFrame(movieMessage)
     movie_data.to_excel(r'movieData.xlsx')
 if __name__=='__main__':
-    main()
+
+   # html=getHtml(r'https://movie.douban.com/subject/3541415/')
+   # getMovieItem(html)
+   main()
