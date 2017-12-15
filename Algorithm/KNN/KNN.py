@@ -1,7 +1,14 @@
 import pandas as pd
 import numpy as np
-from functools import reduce
+import time
 
+def timecount(func):
+    def wap(*args,**kwargs):
+        t0=time.clock()
+        label=func(*args,**kwargs)
+        print('process time is {0}s'.format(time.clock()-t0))
+        return label
+    return wap
 def loadData():
     #train_data=pd.read_csv(path)
     train_data=np.array([[1.0, 0.9], [1.0, 1.0], [0.1, 0.2], [0.0, 0.1]])
@@ -16,6 +23,7 @@ def Normailed(data):
     pro_min=data.min(axis=0)
     return (data-pro_min)/(pro_max-pro_min),pro_max,pro_min
 
+@timecount
 def kNNClassify(newInput,dataSet,labels,rangeMax,rangeMin,k):
     norm_input=(newInput-rangeMin)/(rangeMax-rangeMin)
     row_num=dataSet.shape[0]
