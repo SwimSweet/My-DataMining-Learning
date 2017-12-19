@@ -25,15 +25,20 @@ def normailed(data):
     return (data-pro_min)/(pro_max-pro_min),pro_max-pro_min,pro_min
 
 
-def kNNClassify(newInput,dataSet,labels,k):
+def kNNClassify(newInput,dataSet,labels,k,type='Weighted'):
     row_num=dataSet.shape[0]                 #取得行数
     diff_matrix=np.tile(newInput,(row_num,1))-dataSet
     distance=(diff_matrix**2).sum(axis=1)**0.5  #计算距离
     sort_index=np.argsort(distance,kind='quicksort') #按照距离的大小从小到大排序
     classCount ={}
-    for i in range(k):
-        value=labels[sort_index[k]]
-        classCount[value]=classCount.get(value,0)+1
+    if(type=='Weighted'):
+        for i in range(k):
+            value=labels[sort_index[k]]
+            classCount[value]=classCount.get(value,0)+1/(distance[sort_index[k]]**2)
+    else:
+        for i in range(k):
+            value=labels[sort_index[k]]
+            classCount[value]=classCount.get(value,0)+1
     return sorted(classCount.items(),key=lambda x :x[1],reverse=True)[0][0]  #返回K个样本中的最多类
 
 @timecount
