@@ -1,6 +1,6 @@
 import numpy as np
-import math
 import re
+
 def loadData():
     postingList = [['my', 'dog', 'has', 'flea', 'problems', 'help', 'please'],
                    ['maybe', 'not', 'take', 'him', 'to', 'dog', 'park', 'stupid'],
@@ -12,9 +12,9 @@ def loadData():
     return postingList,classVec
 
 def createVec(dataSet):
-    vocabSet=[]
+    vocabSet=set([])
     for document in dataSet:
-        vocabSet=set(vocabSet) | set(document)
+        vocabSet=vocabSet| set(document)
     return list(vocabSet)
 
 def setOfWordsVec(vocabList,inputSet):
@@ -29,7 +29,8 @@ def setOfWordsVec(vocabList,inputSet):
 
 
 def main():
-    testingNB()
+    #testingNB()
+    spamTest()
 
 def trainNbO(wordVec,tarinlebel):
     docNum=len(wordVec)
@@ -49,8 +50,9 @@ def trainNbO(wordVec,tarinlebel):
         else:
             labelwordcount0 += wordVec[i]
             labelSum0 += sum(wordVec[i])
-    proVec1=labelwordcount1/lebelSum1
-    proVec0=labelwordcount0/labelSum0
+    #转换为对数
+    proVec1=np.log(labelwordcount1/lebelSum1)
+    proVec0=np.log(labelwordcount0/labelSum0)
     return proVec0, proVec1,pro1
 
 def testingNB():
@@ -69,8 +71,8 @@ def testingNB():
 
 
 def classifyNB(vec2Classify,p0Vec,p1Vec,pClass1):
-    p1=sum(vec2Classify*p1Vec)+math.log(pClass1)
-    p0=sum(vec2Classify*p0Vec)+math.log(1-pClass1)
+    p1=sum(vec2Classify*p1Vec)+np.log(pClass1)
+    p0=sum(vec2Classify*p0Vec)+np.log(1-pClass1)
     if(p1>p0):
         return 1
     else:
@@ -89,19 +91,34 @@ def spamTest():
         docList.append(wordList)
         fullText.extend(wordList)
         classList.append(0)
-    vocaList=createVec(docList)
-    trainingSet=range(50);testSet=[]
+    vocabList=createVec(docList)
+    trainingSet=[i for i in range(50)];testSet=[]
+    #随机选出10个测试样本
     for i in range(10):
-        rangIndex=int
-
+        randIndex=int(np.random.uniform(0,len(trainingSet)))
+        testSet.append(trainingSet[randIndex])
+        del(trainingSet[randIndex])
+    trainMat=[];trainClasses=[]
+    #训练样本训练模型
+    for docIndex in trainingSet:
+        trainMat.append(setOfWordsVec(vocabList,docList[docIndex]))
+        trainClasses.append(classList[docIndex])
+    poV,p1V,PsPam=trainNbO(np.array(trainMat),np.array(trainClasses))
+    errorCount=0
+    for docIndex in testSet:
+        wordVector=setOfWordsVec(vocabList,docList[docIndex])
+        if classifyNB(wordVector,poV,p1V,PsPam)!=classList[docIndex]:
+            errorCount+=1
+    print(errorCount)
 
 
 def textParse(bigString):
-    with open(bigString) as f:
-        email=f.read()
-        listOfTokens=re.split(r'\W*',bigString)
+    with open(bigString,'rb') as f:
+        email=str(f.read())
+        listOfTokens=re.split(r'\W*',email)
         return [tok.lower() for tok in listOfTokens if len(tok)>2]
 
 if __name__=='__main__':
+    main()
 
 
