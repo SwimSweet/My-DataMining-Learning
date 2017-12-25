@@ -1,5 +1,6 @@
 from math import log
 from collections import Counter
+import pickle
 
 #计算信息熵
 def calcShannonEnt(dataSet):
@@ -67,11 +68,12 @@ def crateTree(dataSet,labels):
     bestFeature=chooseBestSplitFeature(dataSet)
     bestFeatlabel=labels[bestFeature]
     myTree={bestFeatlabel:{}}
+    newlabels = labels[:]
+    del(newlabels[bestFeature])    #删除列标签的label
     featValue=[temp[bestFeature] for temp in dataSet]
     featValueSet=set(featValue)
     for value in featValueSet:
         valueDataSet=splitDataSet(dataSet,bestFeature,value)
-        newlabels=labels[:]
         myTree[bestFeatlabel][value]=crateTree(valueDataSet,newlabels)
     return myTree
 
@@ -79,10 +81,41 @@ def crateTree(dataSet,labels):
 def MajorCnt(classList):
     return Counter(classList).most_common(1)[0][0]
 
+
+def classify(inputTree, featLabels, testVec):
+   firstStr=list(inputTree.keys())[0]
+   featIndex=featLabels.index(firstStr)
+   seconddict=inputTree[firstStr]
+   result=testVec[featIndex]
+   valueofFeat=seconddict[result]
+   if isinstance(valueofFeat,dict):
+       return classify(valueofFeat,featLabels,testVec)
+   else:
+       return valueofFeat
+
+def storeTree(inputTree,filename):
+    import pickle
+    inputTree=dict(inputTree)
+    fw=open(filename,'wb')
+    pickle.dump(dict(inputTree),fw)
+    fw.close()
+
+def grabTree(filename):
+    fr=open(filename,'rb')
+    return pickle.load(fr)
+
+
+def createLenses(filepath):
+    fr=open(filepath)
+    lenses=[inst.strip().split('\t') for inst in fr.readlines()]
+    lensesLabels=['age','prescript','astigmatic','tearRate']
+    lensesTree=crateTree(lenses,lensesLabels)
+    print(lensesTree)
 def main():
     dataSet, labels=createDataSet()
     myTree=crateTree(dataSet,labels)
-    print(myTree)
-
+    storeTree(myTree,r'myTree.txt')
+    print(grabTree(r'myTree.txt'))
 if __name__=='__main__':
-    main()
+   main()
+   createLenses(r'F:\machinelearninginaction\Ch03\lenses.txt')
