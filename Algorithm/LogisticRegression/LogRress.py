@@ -21,7 +21,7 @@ def timeCount(func):
         start=time.clock()
         weight=func(*args,**kwargs)
         end=time.clock()
-        print("进行500次迭代所需时间 : {0}s".format(start-end))
+        print("梯度下降求最佳回归参数消耗时间 : {0}s".format(start-end))
         return weight
     return wrapper
 
