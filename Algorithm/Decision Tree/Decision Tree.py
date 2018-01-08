@@ -118,4 +118,4 @@ def main():
     print(grabTree(r'myTree.txt'))
 if __name__=='__main__':
    main()
-   createLenses(r'F:\machinelearninginaction\Ch03\lenses.txt')
+   #createLenses(r'F:\machinelearninginaction\Ch03\lenses.txt')
