@@ -29,7 +29,7 @@ def setOfWordsVec(vocabList,inputSet):
 
 
 def main():
-    #testingNB()
+    testingNB()
     spamTest()
 
 def trainNbO(wordVec,tarinlebel):
