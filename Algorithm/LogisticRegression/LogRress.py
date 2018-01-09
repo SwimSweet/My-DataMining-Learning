@@ -3,19 +3,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 
-
+#Load训练数据
 def loadData():
     dataSet=pd.read_table(r'testSet.txt',header=None)
     dataArr=dataSet.loc[:,0:1]
     labelArr=dataSet.loc[:,2]
     dataArr[2]=[1 for x in range(len(dataArr))]
-    return dataArr,labelArr
+    return np.array(dataArr),np.array(labelArr)
 
 def sigmoid(z):
     return 1/(1+np.exp(-z))
 
 
-
+#计算求最优化参数的算法运行时间
 def timeCount(func):
     def wrapper(*args,**kwargs):
         start=time.clock()
@@ -25,10 +25,11 @@ def timeCount(func):
         return weight
     return wrapper
 
+#梯度下降求最优化参数
 @timeCount
 def gradDecline(dataArr,labelArray):
-    dataArray=np.array(dataArr)
-    labelArray=np.array(labelArray).reshape((len(labelArray),1))
+    dataArray=dataArr
+    labelArray=labelArray.reshape((len(labelArray),1))
     m,n=np.shape(dataArray)
     alpha=0.001
     maxCtyles=500
@@ -40,7 +41,25 @@ def gradDecline(dataArr,labelArray):
     return weights
 
 
+#随机梯度下降求最优化参数
+@timeCount
+def stocGradAScent0(dataArr,labelArray ,iterNum=200):
+    m,n=dataArr.shape
+    weight=np.ones(n)
+    alpha=0.01
+    for i in range(iterNum):
+        dataIndex = list(range(m))
+        for j in range(m):
+            index=int(np.random.uniform(0,len(dataIndex)))
+            h=sigmoid(sum(dataArr[index]*weight))
+            error=h-labelArray[index]
+            weight=weight-alpha*error*dataArr[index]
+            del (dataIndex[index])
+    return weight
 
+
+
+#画出决策边界
 def plotBestFit(Weights):
     dataMat,labelMat=loadData()
     dataArr=np.array(dataMat)
@@ -68,4 +87,8 @@ def plotBestFit(Weights):
 
 dataArr,labelArr=loadData()
 Weights=gradDecline(dataArr,labelArr)
+print(Weights)
+weight=stocGradAScent0(dataArr,labelArr)
+print(weight)
 plotBestFit(Weights)
+plotBestFit(weight)
