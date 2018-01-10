@@ -83,12 +83,42 @@ def plotBestFit(Weights):
     plt.xlabel('X1');plt.ylabel('X2')
     plt.show()
 
+def classify(X,weights):
+    prob=sigmoid(X.dot(weights))
+    if prob>0.5:
+        return 1
+    else:
+        return 0
 
+#预测病马的死亡率
+def colicTest():
+    dataTrain=pd.read_table(r'colicTrain.txt',header=None)
+    dataTest=pd.read_table(r'colicTest.txt',header=None )
+    trainSet=np.array(dataTrain.iloc[:,:-1])
+    trainLabel=np.array(dataTrain.iloc[:,-1])
+    testSet=np.array(dataTest.iloc[:,:-1])
+    testLabel=np.array(dataTest.iloc[:,-1])
+    trainWeights=stocGradAScent0(trainSet,trainLabel,500)
+    errorCount=0;numTestVec=len(testLabel)
+    for i in range(numTestVec):
+        if(classify(testSet[i],trainWeights)!=testLabel[i]):
+            errorCount+=1
+    errorRate=float(errorCount)/numTestVec
+    print("the error rate of this test is : {0}".format(errorRate))
+    return errorRate
 
-dataArr,labelArr=loadData()
-Weights=gradDecline(dataArr,labelArr)
-print(Weights)
-weight=stocGradAScent0(dataArr,labelArr)
-print(weight)
-plotBestFit(Weights)
-plotBestFit(weight)
+def multiTest():
+    numTestNum=10;errorSum=0
+    for i in range(10):
+        errorSum+=colicTest()
+    print("after {0} iterations the average error rate is : {1}".format(numTestNum,float(errorSum)/numTestNum))
+
+# dataArr,labelArr=loadData()
+# Weights=gradDecline(dataArr,labelArr)
+# print(Weights)
+# weight=stocGradAScent0(dataArr,labelArr)
+# print(weight)
+# plotBestFit(Weights)
+# plotBestFit(weight)
+
+multiTest()
