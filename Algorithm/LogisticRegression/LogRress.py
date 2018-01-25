@@ -4,6 +4,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import StratifiedKFold,KFold
 
 
 # Load训练数据
@@ -62,6 +63,38 @@ def stocGradAScent0(dataArr, labelArray, iterNum=200):
             weight = weight - alpha * error * dataArr[index]
             del (dataIndex[index])
     return weight
+
+
+# K折交叉检验
+def kCrossValidation(dataSet):
+    trainalldata=dataSet[:,:-1]
+    labelalldata=dataSet[:,-1]
+    skf=StratifiedKFold(n_splits=10)
+    errorsum10=0
+    for train_index ,test_index in skf.split(trainalldata,labelalldata):
+        temperror=0
+        x_train,x_test=trainalldata[train_index],trainalldata[test_index]
+        y_train,y_test=labelalldata[train_index],labelalldata[test_index]
+        weights=stocGradAScent0(x_train,y_train)
+        for i in range(len(x_test)):
+            if(classify(x_test[i],weights)!=y_test[i]):
+                temperror+=1
+        errorsum10+=temperror/len(x_test)
+    print("10折交叉验证法的对率回归错误率为{0}".format(errorsum10/10))
+    stayoneerror=0
+    skf1=KFold(n_splits=len(trainalldata))
+    for train_index ,test_index in skf1.split(trainalldata,labelalldata):
+        temperror=0
+        x_train,x_test=trainalldata[train_index],trainalldata[test_index]
+        y_train,y_test=labelalldata[train_index],labelalldata[test_index]
+        weights=stocGradAScent0(x_train,y_train)
+        for i in range(len(x_test)):
+            if(classify(x_test[i],weights)!=y_test[i]):
+                temperror+=1
+        stayoneerror+=temperror/len(x_test)
+    print("留一法的对率回归错误率为{0}".format(stayoneerror/len(trainalldata)))
+
+
 
 
 # 画出决策边界
@@ -138,10 +171,13 @@ def twodimtest():
     plotBestFit(weight)
 
 def main():
-    twodimtest()
+    colicTest()
     twodimtest()
 
 if __name__== '__main__':
-    main()
+    colicTest()
+    data=pd.read_csv(r'iris.csv').values
+    kCrossValidation(data)
+
 
 
