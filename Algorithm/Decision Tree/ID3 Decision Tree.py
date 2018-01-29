@@ -1,6 +1,7 @@
 from math import log
 from collections import Counter
 import pickle
+import numpy as np
 
 #计算信息熵
 def calcShannonEnt(dataSet):
@@ -15,6 +16,7 @@ def calcShannonEnt(dataSet):
         shannonEnt-=prob*log(prob,2)
     return shannonEnt
 
+# 计算基尼指数
 def calGini(dataSet):
     numberEntries=len(dataSet)
     labelCount={}
@@ -35,7 +37,7 @@ def createDataSet():
 def splitDataSet(dataSet,axis,value):
     retDataSet=[]
     for line in dataSet:
-        if line[axis]==value:
+        if line[axis] == value:
             templist=line[:axis]
             templist.extend(line[axis+1:])
             retDataSet.append(templist)
@@ -48,7 +50,7 @@ def chooseBestSplitFeature(dataSet):
     bestInfo=0; bestFeature=-1
     for axis in range(featureNum):
         info=0
-        valueSet=set(dataSet[axis])
+        valueSet=set([example[axis] for example in dataSet])
         for value in valueSet:
             valueList=splitDataSet(dataSet,axis,value)
             prob=len(valueList)/len(dataSet)
@@ -119,5 +121,8 @@ def main():
 
 
 if __name__=='__main__':
-   main()
-   #createLenses(r'F:\machinelearninginaction\Ch03\lenses.txt')
+   #main()
+   #createLenses(r'lenses.txt')
+
+    list1=[2,3,2,2,3]
+    print(sorted(dict(Counter(list1)).items(),key=lambda x:x[1],reverse=True)[0][1])

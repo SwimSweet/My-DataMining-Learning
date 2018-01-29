@@ -3,6 +3,8 @@ __author__ = 'Huang'
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.rcParams['axes.unicode_minus']=False
 
 
 
@@ -106,17 +108,27 @@ def plot_step_lda(x_lda,labelkclass):
 
 def plot_melon_lda(x,label,w):
     ax = plt.subplot(111)
-    x_trick = np.arange(np.min(x[:, 0]) - 0.1, np.max(x[:, 1] + 0.1), 0.1)
-    y_trick = (w[1] / w[0]) * x_trick
     label_dict = {0: '是', 1: '否'}
     for i,marker,color in zip(range(2),['s', 'o'],['g','r']):
         plt.scatter(x=x[:,0][label==label_dict[i]],y=x[:,1][label==label_dict[i]], marker=marker,
                 color=color,
                 alpha=0.5,
                 label=label_dict[i])
-    plt.plot(x_trick,y_trick,'blue')
+    plt.xlim(-0.2, 1)
+    plt.ylim(-0.5, 0.7)
+    p0_x0 = -x[:, 0].max()
+    p0_x1 = (w[1, 0] / w[0, 0]) * p0_x0
+    p1_x0 = x[:, 0].max()
+    p1_x1 = (w[1, 0] / w[0, 0]) * p1_x0
+    plt.title('watermelon_3a - LDA')
+    plt.xlabel('density')
+    plt.ylabel('ratio_sugar')
+    #plt.scatter(x[y ==label_dict[0], 0], x[y == 0, 1], marker='o', color='k', s=10, label='bad')
+    #plt.scatter(x[y == 1, 0], x[y == 1, 1], marker='o', color='g', s=10, label='good')
+    #plt.legend(loc='upper right')
+    plt.plot([p0_x0, p1_x0], [p0_x1, p1_x1])
     plt.xlabel("密度")
-    plt.ylabel("含糖率")
+    plt.ylabel("含糖  率")
     leg = plt.legend(loc='upper right', fancybox=True)
     leg.get_frame().set_alpha(0.5)
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
@@ -126,6 +138,8 @@ def plot_melon_lda(x,label,w):
     ax.spines["right"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
     ax.spines["left"].set_visible(False)
+    plt.xlim(-0.2, 1)
+    plt.ylim(-0.5, 0.7)
     # 显示网格
     plt.grid()
     plt.tight_layout
@@ -151,12 +165,12 @@ def watermelon(dataarray):
     return w
 
 if __name__ == '__main__':
-    #main()
-    datamelon = pd.read_table(r'watermelon.txt', sep=',', index_col=0).values
-    x = datamelon[:, -3:-1].astype("float32")
-    y = datamelon[:, -1]
-    w = watermelon(datamelon)
-    plot_melon_lda(x,y,w)
+    main()
+    # datamelon = pd.read_table(r'watermelon.txt', sep=',', index_col=0).values
+    # x = datamelon[:, -3:-1].astype("float32")
+    # y = datamelon[:, -1]
+    # w = watermelon(datamelon)
+    # plot_melon_lda(x,y,w)
 
 
 

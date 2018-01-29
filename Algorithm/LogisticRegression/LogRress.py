@@ -102,9 +102,9 @@ def plotBestFit(Weights):
     dataMat, labelMat = loadData()
     dataArr = np.array(dataMat)
     n = dataArr.shape[0]
-    xcord1 = [];
+    xcord1 = []
     ycord1 = []
-    xcord2 = [];
+    xcord2 = []
     ycord2 = []
     for i in range(n):
         if int(labelMat[i] == 1):
@@ -162,10 +162,10 @@ def multiTest():
 
 # 二维数据集测试
 def twodimtest():
-    dataArr,labelArr=loadData()
-    Weights=gradDecline(dataArr,labelArr)
+    dataArr, labelArr = loadData()
+    Weights=gradDecline(dataArr, labelArr)
     print(Weights)
-    weight=stocGradAScent0(dataArr,labelArr)
+    weight=stocGradAScent0(dataArr, labelArr)
     print(weight)
     plotBestFit(Weights)
     plotBestFit(weight)
@@ -176,7 +176,7 @@ def main():
 
 if __name__== '__main__':
     colicTest()
-    data=pd.read_csv(r'iris.csv').values
+    data = pd.read_csv(r'iris.csv').values
     kCrossValidation(data)
 
 
