@@ -4,6 +4,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import StratifiedKFold,KFold
 
 
 # Load训练数据
@@ -64,14 +65,46 @@ def stocGradAScent0(dataArr, labelArray, iterNum=200):
     return weight
 
 
+# K折交叉检验
+def kCrossValidation(dataSet):
+    trainalldata=dataSet[:,:-1]
+    labelalldata=dataSet[:,-1]
+    skf=StratifiedKFold(n_splits=10)
+    errorsum10=0
+    for train_index ,test_index in skf.split(trainalldata,labelalldata):
+        temperror=0
+        x_train,x_test=trainalldata[train_index],trainalldata[test_index]
+        y_train,y_test=labelalldata[train_index],labelalldata[test_index]
+        weights=stocGradAScent0(x_train,y_train)
+        for i in range(len(x_test)):
+            if(classify(x_test[i],weights)!=y_test[i]):
+                temperror+=1
+        errorsum10+=temperror/len(x_test)
+    print("10折交叉验证法的对率回归错误率为{0}".format(errorsum10/10))
+    stayoneerror=0
+    skf1=KFold(n_splits=len(trainalldata))
+    for train_index ,test_index in skf1.split(trainalldata,labelalldata):
+        temperror=0
+        x_train,x_test=trainalldata[train_index],trainalldata[test_index]
+        y_train,y_test=labelalldata[train_index],labelalldata[test_index]
+        weights=stocGradAScent0(x_train,y_train)
+        for i in range(len(x_test)):
+            if(classify(x_test[i],weights)!=y_test[i]):
+                temperror+=1
+        stayoneerror+=temperror/len(x_test)
+    print("留一法的对率回归错误率为{0}".format(stayoneerror/len(trainalldata)))
+
+
+
+
 # 画出决策边界
 def plotBestFit(Weights):
     dataMat, labelMat = loadData()
     dataArr = np.array(dataMat)
     n = dataArr.shape[0]
-    xcord1 = [];
+    xcord1 = []
     ycord1 = []
-    xcord2 = [];
+    xcord2 = []
     ycord2 = []
     for i in range(n):
         if int(labelMat[i] == 1):
@@ -129,19 +162,22 @@ def multiTest():
 
 # 二维数据集测试
 def twodimtest():
-    dataArr,labelArr=loadData()
-    Weights=gradDecline(dataArr,labelArr)
+    dataArr, labelArr = loadData()
+    Weights=gradDecline(dataArr, labelArr)
     print(Weights)
-    weight=stocGradAScent0(dataArr,labelArr)
+    weight=stocGradAScent0(dataArr, labelArr)
     print(weight)
     plotBestFit(Weights)
     plotBestFit(weight)
 
 def main():
-    twodimtest()
+    colicTest()
     twodimtest()
 
 if __name__== '__main__':
-    main()
+    colicTest()
+    data = pd.read_csv(r'iris.csv').values
+    kCrossValidation(data)
+
 
 

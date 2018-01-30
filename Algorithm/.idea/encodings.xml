@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+<<<<<<< HEAD
     <file url="file://$PROJECT_DIR$/Decision Tree/ID3 Decision Tree.py" charset="UTF-8" />
+=======
+    <file url="file://$PROJECT_DIR$/Decision Tree/ID3 or ID4.5 Decision Tree/ID3 or ID4.5 Decision Tree.py" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Decision Tree/ID3 or ID4.5 Decision Tree/myTree.txt" charset="UTF-8" />
+>>>>>>> origin/master
   </component>
 </project>

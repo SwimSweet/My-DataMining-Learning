@@ -12,7 +12,6 @@ def timecount(func):
         label = func(*args, **kwargs)
         print('process time is {0}s'.format(time.clock() - t0))
         return label
-
     return wap
 
 
@@ -51,7 +50,7 @@ def kNNClassify(newInput, dataSet, labels, k, type='Weighted'):
 @timecount
 def datingClassTest():
     interval = 0.1
-    dataSet, labels = loadData(r'C:\Users\Huang\Documents\WeChat Files\hjw_love\Files\datingTestSet.txt')
+    dataSet, labels = loadData(r'datingTestSet2.txt')
     Normdata, ranges, minvals = normailed(dataSet)
     row_num = dataSet.shape[0]
     numTest = int(row_num * interval)
@@ -68,7 +67,7 @@ def classifyPerson():
     gameTimes = float(input("玩游戏时间时间(分钟)"))
     miles = float(input("每年飞行里程"))
     iceCream = float(input("每周消费的冰淇淋公升数"))
-    dataSet, labels = loadData(r'C:\Users\Huang\Documents\WeChat Files\hjw_love\Files\datingTestSet.txt')
+    dataSet, labels = loadData(r'datingTestSet2.txt')
     Normdata, ranges, minvals = normailed(dataSet)
     classifilerResult = kNNClassify(np.array([gameTimes, miles, iceCream]) / ranges, Normdata, labels, 3)
     print("你对这个人的喜欢程度:{0}".format(resultList[classifilerResult - 1]))
