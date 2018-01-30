@@ -1,24 +1,24 @@
 __author__ = 'Huang'
 
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.rcParams['axes.unicode_minus']=False
 
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 
 # 将二分类的特征降至一维
 def calulate_w(dataArray, labelArray):
-    m,n=dataArray.shape
-    labelset=list(set(labelArray))
+    m, n = dataArray.shape
+    labelset = list(set(labelArray))
     dataArray0 = dataArray[labelArray == labelset[0]]
     dataArray1 = dataArray[labelArray == labelset[1]]
     miu0 = np.mean(dataArray0, axis=0)
     miu1 = np.mean(dataArray1, axis=0)
     # 散内矩阵
     # 散内矩阵刚好是每个类中少除以类样本数-1的协方差矩阵
-    Sw = np.cov(dataArray0.T)*(len(dataArray0)-1) + np.cov(dataArray1.T)*(len(dataArray1)-1)
+    Sw = np.cov(dataArray0.T) * (len(dataArray0) - 1) + np.cov(dataArray1.T) * (len(dataArray1) - 1)
     # 散间矩阵
     diffMeanVec = (miu0 - miu1).reshape(len(miu0), 1)
     invSw = np.linalg.inv(Sw)
@@ -73,19 +73,20 @@ def lda_muliti_class(dataArray, labelkclass):
         W.append(eig_pairs[i][1])
     return np.array(W).T
 
+
 # 样例用的数据集刚好可以降到二维，可以用可视化查看数据分布
-def plot_step_lda(x_lda,labelkclass):
+def plot_step_lda(x_lda, labelkclass):
     ax = plt.subplot(111)
     label_dict = {0: 'Setosa', 1: 'Versicolor', 2: 'Virginica'}
-    for label,marker,color in zip(
-        range(3),('^', 's', 'o'),('blue', 'red', 'green')):
-        plt.scatter(x=x_lda[:,0].real[labelkclass == label],
-                y=x_lda[:,1].real[labelkclass == label],
-                marker=marker,
-                color=color,
-                alpha=0.5,
-                label=label_dict[label]
-                )
+    for label, marker, color in zip(
+            range(3), ('^', 's', 'o'), ('blue', 'red', 'green')):
+        plt.scatter(x=x_lda[:, 0].real[labelkclass == label],
+                    y=x_lda[:, 1].real[labelkclass == label],
+                    marker=marker,
+                    color=color,
+                    alpha=0.5,
+                    label=label_dict[label]
+                    )
     plt.xlabel('LD1')
     plt.ylabel('LD2')
     leg = plt.legend(loc='upper right', fancybox=True)
@@ -93,7 +94,7 @@ def plot_step_lda(x_lda,labelkclass):
     plt.title('LDA: Iris projection onto the first 2 linear discriminants')
     # hide axis ticks
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
-             labelbottom="on", left="off", right="off", labelleft="on")
+                    labelbottom="on", left="off", right="off", labelleft="on")
     # 移除图的边界
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -105,15 +106,14 @@ def plot_step_lda(x_lda,labelkclass):
     plt.show()
 
 
-
-def plot_melon_lda(x,label,w):
+def plot_melon_lda(x, label, w):
     ax = plt.subplot(111)
     label_dict = {0: '是', 1: '否'}
-    for i,marker,color in zip(range(2),['s', 'o'],['g','r']):
-        plt.scatter(x=x[:,0][label==label_dict[i]],y=x[:,1][label==label_dict[i]], marker=marker,
-                color=color,
-                alpha=0.5,
-                label=label_dict[i])
+    for i, marker, color in zip(range(2), ['s', 'o'], ['g', 'r']):
+        plt.scatter(x=x[:, 0][label == label_dict[i]], y=x[:, 1][label == label_dict[i]], marker=marker,
+                    color=color,
+                    alpha=0.5,
+                    label=label_dict[i])
     plt.xlim(-0.2, 1)
     plt.ylim(-0.5, 0.7)
     p0_x0 = -x[:, 0].max()
@@ -123,9 +123,9 @@ def plot_melon_lda(x,label,w):
     plt.title('watermelon_3a - LDA')
     plt.xlabel('density')
     plt.ylabel('ratio_sugar')
-    #plt.scatter(x[y ==label_dict[0], 0], x[y == 0, 1], marker='o', color='k', s=10, label='bad')
-    #plt.scatter(x[y == 1, 0], x[y == 1, 1], marker='o', color='g', s=10, label='good')
-    #plt.legend(loc='upper right')
+    # plt.scatter(x[y ==label_dict[0], 0], x[y == 0, 1], marker='o', color='k', s=10, label='bad')
+    # plt.scatter(x[y == 1, 0], x[y == 1, 1], marker='o', color='g', s=10, label='good')
+    # plt.legend(loc='upper right')
     plt.plot([p0_x0, p1_x0], [p0_x1, p1_x1])
     plt.xlabel("密度")
     plt.ylabel("含糖  率")
@@ -158,11 +158,13 @@ def main():
     print(x_laded)
     plot_step_lda(x_laded, labelclass)
 
+
 def watermelon(dataarray):
     x = dataarray[:, -3:-1].astype("float32")
     y = dataarray[:, -1]
     w = calulate_w(x, y)
     return w
+
 
 if __name__ == '__main__':
     main()
@@ -171,7 +173,3 @@ if __name__ == '__main__':
     # y = datamelon[:, -1]
     # w = watermelon(datamelon)
     # plot_melon_lda(x,y,w)
-
-
-
-
