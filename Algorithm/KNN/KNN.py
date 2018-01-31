@@ -36,7 +36,7 @@ def kNNClassify(newInput, dataSet, labels, k, type='Weighted'):
     distance = (diff_matrix ** 2).sum(axis=1) ** 0.5  # 计算距离
     sort_index = np.argsort(distance, kind='quicksort')  # 按照距离的大小从小到大排序
     classCount = {}
-    if (type == 'Weighted'):
+    if type == 'Weighted':
         for i in range(k):
             value = labels[sort_index[k]]
             classCount[value] = classCount.get(value, 0) + 1 / (distance[sort_index[k]] ** 2)
@@ -58,7 +58,8 @@ def datingClassTest():
     for i in range(numTest):
         classifilerResult = kNNClassify(Normdata[i, :], Normdata[numTest:, :], labels[numTest:], 3)
         print("分类结果为：{0}, 原结果为{1}".format(classifilerResult, labels[i]))
-        if (classifilerResult != labels[i]):  error += 1
+        if classifilerResult != labels[i]:
+            error += 1
     print("总错误率为{0}".format(error / float(numTest)))
 
 
