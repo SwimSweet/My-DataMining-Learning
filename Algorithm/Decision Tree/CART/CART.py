@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from collections import Iterable
 
 
 class treeNode():
@@ -93,8 +94,13 @@ def linearSolve(dataSet):
     X = np.ones((m, n))
     Y = np.ones((m, 1))
     X[:, 1:n] = dataSet[:, 0:n - 1]
+    X1=dataSet[:,0:n-1]
+    X1=np.hstack((X1,np.ones((m,1))))
     Y = dataSet[:, -1]
     xTx = X.T.dot(X)
+    xTx1=X1.T.dot(X1)
+    if np.linalg.det(xTx1)==0:
+        print("aa")
     if np.linalg.det(xTx) == 0:
         #raise NameError("xTx 方阵是奇异矩阵，不可逆")
         return np.array([np.mean(Y),0]),X,Y
@@ -126,10 +132,10 @@ def regTreeEval(model, inDat):
 
 # 模型树节点
 def modelTreeEval(model, inDat):
-    n = np.shape(inDat)[1]
-    X = np.ones((1, n + 1))
-    X[:, 1:n + 1] = inDat
-    return model.dot(X.T)
+    n = len(inDat)
+    X = np.ones((1, n))
+    X[:,1:n] = inDat[:-1]
+    return float(model.dot(X.T))
 
 
 # 对一个样本进行预测的函数
@@ -146,12 +152,12 @@ def treeForeCast(tree, inData, modelEval=regTreeEval):
         else:
             return modelEval(tree['right'], inData)
 
-
+# 预测函数
 def createForeCast(tree, testData, modelEval=regTreeEval):
     m = len(testData)
     yHat = np.zeros((m, 1))
     for i in range(m):
-        yHat[i, 0] = treeForeCast(tree, testData[:, i], modelEval)
+        yHat[i, 0] = treeForeCast(tree, testData[i], modelEval)
     return yHat
 
 
@@ -182,6 +188,7 @@ def prune(tree, testData):
         return tree
 
 
+
 if __name__ == '__main__':
     trainArray = loadData(r'bikeSpeedVsIq_train.txt')
     testArray = loadData(r'bikeSpeedVsIq_test.txt')
@@ -189,7 +196,18 @@ if __name__ == '__main__':
     print(regTree)
     modelTree = createTree(trainArray, modelLeaf, modelErr, (1, 20))
     print(modelTree)
+<<<<<<< HEAD
     yRegHat=createForeCast(regTree,testArray,regTreeEval)
     yModelHat=createForeCast(modelTree,testArray,modelTreeEval)
     print(yRegHat)
     print(yModelHat)
+=======
+    yRegHat=createForeCast(regTree, testArray, regTreeEval)
+    yModelHat=createForeCast(modelTree, testArray, modelTreeEval)
+    print(np.corrcoef(yRegHat,testArray[:,1],rowvar=0)[0,1])
+    print(np.corrcoef(yModelHat,testArray[:,1],rowvar=0)[0,1])
+
+
+
+
+>>>>>>> origin/master
