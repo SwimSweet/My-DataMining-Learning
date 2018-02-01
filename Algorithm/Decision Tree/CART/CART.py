@@ -96,7 +96,8 @@ def linearSolve(dataSet):
     Y = dataSet[:, -1]
     xTx = X.T.dot(X)
     if np.linalg.det(xTx) == 0:
-        raise NameError("xTx 方阵是奇异矩阵，不可逆")
+        #raise NameError("xTx 方阵是奇异矩阵，不可逆")
+        return np.array([np.mean(Y),0]),X,Y
     w = np.linalg.inv(xTx).dot(X.T.dot(Y))
     return w, X, Y
 
@@ -112,6 +113,8 @@ def modelErr(dataSet):
     if len(dataSet) == 0:
         return 0
     w, X, Y = linearSolve(dataSet)
+    if  w[1]==0:
+        print("aa")
     yHat = X.dot(w)
     return sum((yHat - Y) ** 2)
 
@@ -185,6 +188,7 @@ if __name__ == '__main__':
     regTree = createTree(trainArray, ops=(1, 20))
     print(regTree)
     modelTree = createTree(trainArray, modelLeaf, modelErr, (1, 20))
+    print(modelTree)
     yRegHat=createForeCast(regTree,testArray,regTreeEval)
     yModelHat=createForeCast(modelTree,testArray,modelTreeEval)
     print(yRegHat)
