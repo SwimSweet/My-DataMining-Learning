@@ -196,18 +196,11 @@ if __name__ == '__main__':
     print(regTree)
     modelTree = createTree(trainArray, modelLeaf, modelErr, (1, 20))
     print(modelTree)
-<<<<<<< HEAD
     yRegHat=createForeCast(regTree,testArray,regTreeEval)
     yModelHat=createForeCast(modelTree,testArray,modelTreeEval)
     print(yRegHat)
     print(yModelHat)
-=======
     yRegHat=createForeCast(regTree, testArray, regTreeEval)
     yModelHat=createForeCast(modelTree, testArray, modelTreeEval)
     print(np.corrcoef(yRegHat,testArray[:,1],rowvar=0)[0,1])
     print(np.corrcoef(yModelHat,testArray[:,1],rowvar=0)[0,1])
-
-
-
-
->>>>>>> origin/master
