@@ -140,7 +140,7 @@ def createTree(dataSet,enc,sepList,feaList,labels,resultsLabel):
 
 
 if __name__=='__main__':
-    # 经过数字转换的数据集和ont-hot转换模型
+    #经过数字转换的数据集和ont-hot转换模型
     dataSet,enc=loadData()
     # 标记哪些属性是离散属性
     sepList=[0,1,2,3,4,5]
