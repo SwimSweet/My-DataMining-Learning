@@ -111,7 +111,6 @@ def spamTest():
             errorCount+=1
     print(errorCount)
 
-
 def textParse(bigString):
     with open(bigString,'rb') as f:
         email=str(f.read())
