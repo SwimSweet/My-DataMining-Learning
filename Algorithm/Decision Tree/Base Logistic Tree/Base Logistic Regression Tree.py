@@ -66,7 +66,6 @@ def chooseBestSplitFeature(dataSet,enc,seplist,feaList):
 
 
 
-
 def logisticError(dataSet,enc):
     transFormDataSet=enc.transform(dataSet[:,:6]).toarray()
     m,n=dataSet.shape
