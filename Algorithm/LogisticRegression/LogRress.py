@@ -148,7 +148,7 @@ def colicTest():
         if (classify(testSet[i], trainWeights) != testLabel[i]):
             errorCount += 1
     errorRate = float(errorCount) / numTestVec
-    print("the error rate of this test is : {0}".format(errorRate))
+    print("the error rate of this test_import is : {0}".format(errorRate))
     return errorRate
 
 # 多次重复预测取平均

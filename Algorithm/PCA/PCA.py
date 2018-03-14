@@ -26,12 +26,12 @@ def pca(dataSet,topFeat):
     reconMat = (lowDDataMat.dot(redEigVects.T)) + meanvector
     return lowDDataMat,reconMat
 
-
 def main():
     dataSet = loadData()
     lowDMat, reconMat = pca(dataSet, 1)
     print(lowDMat)
     print(reconMat)
+
 
 if __name__=='__main__':
     main()
