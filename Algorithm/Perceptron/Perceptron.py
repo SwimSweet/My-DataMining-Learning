@@ -2,7 +2,6 @@ __author__ = 'Huang'
 
 import numpy as np
 import pandas as pd
-
 def loadData(fileName):
     dataSet=pd.read_table(fileName,header=None).values
     dataArr=dataSet[:,:-1]
@@ -51,7 +50,7 @@ def dualCalPar(dataArr,labelArr):
 
 
 def main():
-    dataArr,labelArr=loadData(r'test.txt')
+    dataArr,labelArr=loadData(r'test_import.txt')
     w,b=calPar(dataArr,labelArr)
     w1,b1=dualCalPar(dataArr,dataArr)
     print(w)
@@ -59,5 +58,16 @@ def main():
     print(w1)
     print(b1)
 
+
+
+
+
 if __name__=='__main__':
-    main()
+    #main()
+    a=np.mat(np.arange(12).reshape(3,4))
+    b=np.mat(np.array([1,2,3])).transpose()
+    c=np.mat(np.array([1,2,3,4]))
+    print(a+b)
+    print(a+c)
+
+
