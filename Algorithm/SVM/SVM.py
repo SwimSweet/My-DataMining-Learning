@@ -1,3 +1,5 @@
+___author___='Huang'
+
 import numpy as np
 import pandas as pd
 
@@ -81,7 +83,7 @@ def smoSimple(dataSet,classLabel,C,toler,maxIter):
 
 
 '''
-#######********************************
+#######*******************************  *
 带核函数部分
 #####*************************************
 '''
@@ -267,7 +269,7 @@ def testRbf1(k1=1.3):
         kernelEval = kernelTrans(sVs,datMat[i,:],('rbf', k1))
         predict=kernelEval.T * np.multiply(labelSV,alphas[svInd]) + b
         if np.sign(predict)!=np.sign(labelArr[i]): errorCount += 1
-    print ("the test error rate is: %f" % (float(errorCount)/m) )
+    print ("the test_import error rate is: %f" % (float(errorCount)/m) )
 
 
 '''
@@ -468,8 +470,18 @@ def testDigits(kTup=('rbf',10)):
 #print(alphas2)
 #testRbf()
 #testRbf(k1=0.1)
-testDigits(('rbf',20))
-testDigits(('rbf',5))
-testDigits(('rbf',10))
-testDigits(('rbf',50))
-testDigits(('lin',0))
+def Digits():
+    testDigits(('rbf', 20))
+    testDigits(('rbf', 5))
+    testDigits(('rbf', 10))
+    testDigits(('rbf', 50))
+    testDigits(('lin', 0))
+
+def main():
+    #手写体识别
+    Digits()
+
+if __name__=='__main__':
+    main()
+
+
